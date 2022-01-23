@@ -153,11 +153,14 @@ I tried to remove all batch_norm layers in MobileNetV2. Here are my settings.
 |  Model   | MobilenetNetV2(without bn layers) |
 |  ----  | ----  |
 | Dataset  | CIFAR10 |
+| Train method | train from scratch |
+| Image size | 32*32 |
 | lr  | 0.2,0.8 |
-| batch_size| 512,2048|
+| batch_size| 512,2048(checkpoint) |
 | optimizer| SGD|
-| scheduler| Linear decay |
+| scheduler| Linear decay(at 30,60) |
 |weight decay|1e-4|
+|Epochs|90|
 
 
 
@@ -174,20 +177,23 @@ And here is the correction.
 |  Model   | MobilenetNetV2  |
 |  ----  | ----  |
 | Dataset  | CIFAR10 |
-| lr  | 0.2,0.8 |
-| batch_size| 512,2048|
+| train method | Finetune |
+| Image size | 224 |
+| lr  | 0.05,0.1,0.2,0.4 |
+| batch_size| 128,256,512,1024(checkpoint) |
 | optimizer| SGD|
-| scheduler| Cosinannealing with linear warm up
-|weight decay|1e-4
+| scheduler| Cosinannealing with linear warm up|
+|weight decay|1e-4|
+|Epochs|100|
 
 ## Acc vs batchsize
 
 > | Batchsize | Acc1_validation |
 > | --------- | --------------- |
-> | 128       | 95.3%           |
-> | 256       | 95.1%           |
-> | 512       | 94.9%           |
-> | 1024      | 94.1%           |
+> | 128       | 96.3%           |
+> | 256       | 96.1%           |
+> | 512       | 95.3%           |
+> | 1024      | 95.1%           |
 >
 > 
 
@@ -208,7 +214,8 @@ bigger batch sizes get better results on training datasets, while performing wor
 | Optimizer          | SGD                                |
 | lr                 | 0.4                                |
 | Batchsize          | 512                                |
-| Scheduler          | Cosannealing                       |
+| Scheduler          | Cosannealing with warm up          |
+| Epochs             | 90                                 |
 | Dist pachage       | pytorch rpc,nccl                   |
 
 ## API
