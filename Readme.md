@@ -1,3 +1,7 @@
+---
+typora-copy-images-to: ./pic
+---
+
 
 
 # Difference about nn.Dataparallel and nn.distributed
@@ -156,7 +160,7 @@ I tried to remove all batch_norm layers in MobileNetV2. Here are my settings.
 
 
 
-![image-20220123210032129](/Users/catbeta/Library/Application Support/typora-user-images/image-20220123210032129.png)
+![image-20220123210542909](./pic/image-20220123210542909.png)
 
 
 
@@ -263,5 +267,5 @@ in here we use 4GPUs, and I mannually separate the model, it might be brutal.
 | Acc           | 93.3%         | 93.8%        |
 | Time_perbatch | 1.616s        | 0.396s       |
 
-![image-20220123205017868](/Users/catbeta/Documents/research/report/pic/image-20220123205017868.png)
+![image-20220123205017868](./pic/image-20220123205017868.png)
 
