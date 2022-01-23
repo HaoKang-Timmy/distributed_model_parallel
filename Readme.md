@@ -4,14 +4,14 @@ typora-copy-images-to: ./pic
 
 
 
-# Difference about nn.Dataparallel and nn.distributed
+# The difference about nn.Dataparallel and nn.distributed
 ## Conclusion
 learned a lot from https://zhuanlan.zhihu.com/p/343951042
-1. `Dataparallel` uses one process and multiple threads, `distributed` uses multi process,multiple threads may cause threashing.
+1. `Dataparallel` uses one process and multiple threads, `distributed` uses multi-process, multiple threads may cause threshing.
 2. `distributed` could be used for multiple device training(like CPU and GPU)
-3. `distributed` has special comment about sparse gradient?
+3. `distributed` has a special comment about sparse gradient?
 4. `paralel_apply` is used by both
-5. communication cost is higher for DP when GPU number is more.Ring AllReduce is used,(one time reduce one bucket). Also parameters are separated in buckets.
+5. communication cost is higher for DP when the GPU number is more. Ring AllReduce is used,(one time reduce one bucket). Also, parameters are separated into buckets.
 6. `Dataparallel` take more cost on device[0](gather and scatter)
 
 ## Dataparallel
@@ -25,9 +25,10 @@ https://github.com/pytorch/pytorch/blob/master/torch/nn/parallel/data_parallel.p
             return self.gather(outputs, self.output_device)
 
 ```
-`scatter` separate tensors for different GPUs.\
+`scatter` separate tensors for different GPUs.
 `scatter` use C++ backend
-`replicas` means copy model, inputs, and network buffers to multy GPUs,uses `Broadcast`  `comm.broadcast_coalesced` function
+`replicas` mean copy model, inputs, and network buffers to multi GPUs, uses `Broadcast.comm.broadcast_coalesced` function
+
 ```
    class Broadcast(Function):
 
@@ -166,8 +167,9 @@ I tried to remove all batch_norm layers in MobileNetV2. Here are my settings.
 
 # Correction of 512 batch size training
 
-In the last part, I got a wrong picture about finetune in different batch size.
+In the last part, I got the wrong picture about finetune in different batch sizes.
 And here is the correction.
+
 ## Settings
 |  Model   | MobilenetNetV2  |
 |  ----  | ----  |
@@ -191,7 +193,7 @@ And here is the correction.
 
 ![image-20220123200738642](./pic/image-20220123200738642.png)
 
-bigger batch size get better results on training datasets, while performs worse than smaller batch size in validation datasets.
+bigger batch sizes get better results on training datasets, while performing worse than smaller batch sizes in validation datasets.
 
 # Distributed training(model parallel)
 
@@ -260,7 +262,7 @@ class ForwardReceive_BackwardSend(autograd.Function):
 
 ## dataparallel vs modelparallel
 
-in here we use 4GPUs, and I mannually separate the model, it might be brutal.
+here we use 4GPUs, and I manually separate the model, it might be brutal.
 
 | Item          | Modelparallel | Dataparallel |
 | ------------- | ------------- | ------------ |
