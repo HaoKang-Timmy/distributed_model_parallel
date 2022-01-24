@@ -69,6 +69,7 @@ https://github.com/pytorch/pytorch/blob/master/torch/nn/parallel/data_parallel.p
 ```
 `parallel apply` means separately get the gradient and make an avergae of them.\
 parallel use threading to execute models and gather each models output\
+
 ```
     def _worker(i, module, input, kwargs, device=None):
         torch.set_grad_enabled(grad_enabled)
@@ -284,5 +285,20 @@ here we use 4GPUs, and I manually separate the model, it might be brutal.
 | Acc           | 93.3%         | 93.8%        |
 | Time_perbatch | 1.616s        | 0.396s       |
 
+However if we use 2 GPUs, with 256 batchsize
+
+| Item          | Modelparallel | Dataparallel |
+| ------------- | ------------- | ------------ |
+| Time_perbatch | 0.772s        | 0.363s       |
+
 ![image-20220123205017868](./pic/image-20220123205017868.png)
 
+# Something abnormal
+
+## Dataset shuffle
+
+​	1.It seems to cost many times in training. In the first 10 epochs. When training on two GPUs using model parallel. In the first 10 epochs. time_perbatch is 0.89s and 0.32s
+
+2. spares gradient in dataparallel, since we know that sparse gradient cause vanishing gradient. But will parallel cause sparse gradient?
+
+   
