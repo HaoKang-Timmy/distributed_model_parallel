@@ -11,7 +11,7 @@ learned a lot from https://zhuanlan.zhihu.com/p/343951042
 2. `distributed` could be used for multiple device training(like CPU and GPU)
 3. `distributed` has a special comment about sparse gradient?
 4. `paralel_apply` is used by both
-5. communication cost is higher for DP when the GPU number is more. Ring AllReduce is used,(one time reduce one bucket). Also, parameters are separated into buckets.
+5. communication cost is higher for DP when the GPU number is more. Ring AllReduce is used,(one time reduce one bucket). Also, parameters are separated into buckets. On each foward, it checks each varable is used or not.
 6. `Dataparallel` take more cost on device[0](gather and scatter)
 
 ## Dataparallel
@@ -147,8 +147,16 @@ https://github.com/pytorch/pytorch/blob/master/torch/nn/parallel/distributed.py
 def _ddp_init_helper(self):
 ```
 
+copy models separate parameters to groups, create reducer and prepare for sync batch norm layers.
+
+The most important part is Reducer, but it is written in C++
+
+Reducer do tasks about initialize and has an important function autogrid_hook
+
+It is used for checking parameters are used or not.
 
 # About bn and large batch training
+
 I tried to remove all batch_norm layers in MobileNetV2. Here are my settings.
 |  Model   | MobilenetNetV2(without bn layers) |
 |  ----  | ----  |
